@@ -3,8 +3,8 @@ package private_ip_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"visir/pkg/infrastructure/network/private_ip"
-	"visir/pkg/system/network"
+	"github.com/ChromaMaster/visir/pkg/infrastructure/network/private_ip"
+	"github.com/ChromaMaster/visir/pkg/system/network"
 )
 
 var _ = Describe("Infrastructure / InternalIP", func() {

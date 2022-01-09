@@ -2,7 +2,7 @@ package network_test
 
 import (
 	"errors"
-	"visir/pkg/system/network"
+	"github.com/ChromaMaster/visir/pkg/system/network"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

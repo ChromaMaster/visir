@@ -3,7 +3,7 @@ package public_ip_ipinfo_test
 import (
 	"io"
 	"net/http"
-	"visir/pkg/infrastructure/network/public_ip_ipinfo"
+	"github.com/ChromaMaster/visir/pkg/infrastructure/network/public_ip_ipinfo"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

@@ -2,7 +2,7 @@ package private_ip
 
 import (
 	"net"
-	"visir/pkg/system/network"
+	"github.com/ChromaMaster/visir/pkg/system/network"
 )
 
 type PrivateIPAddressProvider struct{}

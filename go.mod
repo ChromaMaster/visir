@@ -1,4 +1,4 @@
-module visir
+module github.com/ChromaMaster/visir
 
 go 1.17
 
