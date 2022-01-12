@@ -36,7 +36,7 @@ var _ = Describe("Repository", func() {
 			Expect(err).ToNot(HaveOccurred())
 
 			err = repository.Register(command.Command{Name: "command1", Command: func(string) {}})
-			Expect(err).To(MatchError("Command <command1> is already registered"))
+			Expect(err).To(MatchError(command.ErrCommandAlreadyRegistered))
 		})
 	})
 })

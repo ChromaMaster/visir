@@ -5,6 +5,11 @@ import (
 	"fmt"
 )
 
+var (
+	ErrCommandNotFound = errors.New("command not found")
+	ErrCommandAlreadyRegistered = errors.New("command already registered")
+)
+
 type Repository interface {
 	Register(command Command) error
 	Get(name string) (Command, error)
@@ -30,13 +35,13 @@ func (c CommandRepository) findCommand(name string) (Command, error) {
 		return command, nil
 	}
 
-	return Command{}, errors.New(fmt.Sprintf("Command <%s> not found", name))
+	return Command{}, fmt.Errorf("command <%s> not found: %w", name, ErrCommandNotFound)
 }
 
 func (c *CommandRepository) Register(command Command) error {
 	_, err := c.findCommand(command.Name)
 	if err == nil {
-		return errors.New(fmt.Sprintf("Command <%s> is already registered", command.Name))
+		return fmt.Errorf("command <%s> is already registered: %w", command.Name, ErrCommandAlreadyRegistered)
 	}
 	c.commands[command.Name] = command
 	return nil
