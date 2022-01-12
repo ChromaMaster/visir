@@ -1,8 +1,8 @@
 package private_ip
 
 import (
-	"net"
 	"github.com/ChromaMaster/visir/pkg/system/network"
+	"net"
 )
 
 type PrivateIPAddressProvider struct{}
