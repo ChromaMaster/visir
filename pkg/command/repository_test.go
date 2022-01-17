@@ -31,6 +31,14 @@ var _ = Describe("Repository", func() {
 		Expect(command.Name).To(Equal("command1"))
 	})
 
+	It("is able to unregister a command", func() {
+		err := repository.Register(command.Command{Name: "command1", Command: func(string) error { return nil }})
+		Expect(err).ToNot(HaveOccurred())
+
+		err = repository.Unregister("command1")
+		Expect(err).ToNot(HaveOccurred())
+	})
+
 	When("a command with the same name is already registered", func() {
 		It("cannot be registered", func() {
 			err := repository.Register(command.Command{Name: "command1", Command: func(string) error { return nil }})
@@ -38,6 +46,13 @@ var _ = Describe("Repository", func() {
 
 			err = repository.Register(command.Command{Name: "command1", Command: func(string) error { return nil }})
 			Expect(err).To(MatchError(command.ErrCommandAlreadyRegistered))
+		})
+	})
+
+	When("trying to unregister a non-registered command", func() {
+		It("fails", func() {
+			err := repository.Unregister("command1")
+			Expect(err).To(MatchError(command.ErrCommandNotFound))
 		})
 	})
 

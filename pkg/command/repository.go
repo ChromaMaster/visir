@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	ErrCommandNotFound = errors.New("command not found")
+	ErrCommandNotFound          = errors.New("command not found")
 	ErrCommandAlreadyRegistered = errors.New("command already registered")
 )
 
@@ -54,4 +54,13 @@ func (c CommandRepository) Get(name string) (Command, error) {
 	}
 
 	return command, nil
+}
+
+func (c CommandRepository) Unregister(name string) error {
+	_, err := c.findCommand(name)
+	if err != nil {
+		return err
+	}
+	delete(c.commands, "name")
+	return nil
 }
