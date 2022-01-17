@@ -21,7 +21,7 @@ type CommandRepository struct {
 
 type Command struct {
 	Name    string
-	Command func(string)
+	Command func(string) error
 }
 
 func NewRepository() *CommandRepository {
