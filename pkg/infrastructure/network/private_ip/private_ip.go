@@ -1,7 +1,7 @@
 package private_ip
 
 import (
-	"github.com/ChromaMaster/visir/pkg/system/network"
+	"github.com/ChromaMaster/visir/pkg/domain/system/network"
 	"net"
 )
 

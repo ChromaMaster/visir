@@ -2,7 +2,7 @@ package command_test
 
 import (
 	"errors"
-	"github.com/ChromaMaster/visir/pkg/command"
+	"github.com/ChromaMaster/visir/pkg/domain/command"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
