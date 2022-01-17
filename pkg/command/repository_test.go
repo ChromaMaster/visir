@@ -1,6 +1,7 @@
 package command_test
 
 import (
+	"errors"
 	"github.com/ChromaMaster/visir/pkg/command"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -37,6 +38,21 @@ var _ = Describe("Repository", func() {
 
 			err = repository.Register(command.Command{Name: "command1", Command: func(string) error { return nil }})
 			Expect(err).To(MatchError(command.ErrCommandAlreadyRegistered))
+		})
+	})
+
+	When("a command it's retrieved", func() {
+		It("can be executed", func() {
+			err := repository.Register(command.Command{Name: "command1", Command: func(string) error {
+				return errors.New("cannot execute the command")
+			}})
+			Expect(err).ToNot(HaveOccurred())
+
+			command, err := repository.Get("command1")
+			Expect(err).ToNot(HaveOccurred())
+
+			err = command.Command("")
+			Expect(err).To(MatchError("cannot execute the command"))
 		})
 	})
 })
