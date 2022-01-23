@@ -11,8 +11,9 @@ var (
 )
 
 type Repository interface {
-	Register(command Command) error
-	Get(name string) (Command, error)
+	RegisterCommand(command Command) error
+	GetCommand(name string) (Command, error)
+	UnregisterCommand(name string) error
 }
 
 type CommandRepository struct {
@@ -38,7 +39,7 @@ func (c CommandRepository) findCommand(name string) (Command, error) {
 	return Command{}, fmt.Errorf("command <%s> not found: %w", name, ErrCommandNotFound)
 }
 
-func (c *CommandRepository) Register(command Command) error {
+func (c *CommandRepository) RegisterCommand(command Command) error {
 	_, err := c.findCommand(command.Name)
 	if err == nil {
 		return fmt.Errorf("command <%s> is already registered: %w", command.Name, ErrCommandAlreadyRegistered)
@@ -47,7 +48,7 @@ func (c *CommandRepository) Register(command Command) error {
 	return nil
 }
 
-func (c CommandRepository) Get(name string) (Command, error) {
+func (c CommandRepository) GetCommand(name string) (Command, error) {
 	command, err := c.findCommand(name)
 	if err != nil {
 		return Command{}, err
@@ -56,7 +57,7 @@ func (c CommandRepository) Get(name string) (Command, error) {
 	return command, nil
 }
 
-func (c CommandRepository) Unregister(name string) error {
+func (c CommandRepository) UnregisterCommand(name string) error {
 	_, err := c.findCommand(name)
 	if err != nil {
 		return err

@@ -17,53 +17,54 @@ var _ = Describe("Repository", func() {
 	})
 
 	It("is able to register a command", func() {
-		err := repository.Register(command.Command{Name: "", Command: func(string) error { return nil }})
+		err := repository.RegisterCommand(command.Command{Name: "", Command: func(string) error { return nil }})
 
 		Expect(err).ToNot(HaveOccurred())
 	})
 
 	It("is able to retrieve a command", func() {
-		err := repository.Register(command.Command{Name: "command1", Command: func(string) error { return nil }})
+		err := repository.RegisterCommand(command.Command{Name: "command1", Command: func(string) error { return nil }})
 		Expect(err).ToNot(HaveOccurred())
 
-		command, err := repository.Get("command1")
+		command, err := repository.GetCommand("command1")
 		Expect(err).ToNot(HaveOccurred())
 		Expect(command.Name).To(Equal("command1"))
 	})
 
 	It("is able to unregister a command", func() {
-		err := repository.Register(command.Command{Name: "command1", Command: func(string) error { return nil }})
+		err := repository.RegisterCommand(command.Command{Name: "command1", Command: func(string) error { return nil }})
 		Expect(err).ToNot(HaveOccurred())
 
-		err = repository.Unregister("command1")
+		err = repository.UnregisterCommand("command1")
 		Expect(err).ToNot(HaveOccurred())
 	})
 
 	When("a command with the same name is already registered", func() {
 		It("cannot be registered", func() {
-			err := repository.Register(command.Command{Name: "command1", Command: func(string) error { return nil }})
+			err := repository.RegisterCommand(command.Command{Name: "command1", Command: func(string) error { return nil }})
 			Expect(err).ToNot(HaveOccurred())
 
-			err = repository.Register(command.Command{Name: "command1", Command: func(string) error { return nil }})
+			err = repository.RegisterCommand(command.Command{Name: "command1", Command: func(string) error { return nil }})
 			Expect(err).To(MatchError(command.ErrCommandAlreadyRegistered))
 		})
 	})
 
 	When("trying to unregister a non-registered command", func() {
 		It("fails", func() {
-			err := repository.Unregister("command1")
+			// TODO(fede): El texto del "It" tiene algun sentido?
+			err := repository.UnregisterCommand("command1")
 			Expect(err).To(MatchError(command.ErrCommandNotFound))
 		})
 	})
 
 	When("a command it's retrieved", func() {
 		It("can be executed", func() {
-			err := repository.Register(command.Command{Name: "command1", Command: func(string) error {
+			err := repository.RegisterCommand(command.Command{Name: "command1", Command: func(string) error {
 				return errors.New("cannot execute the command")
 			}})
 			Expect(err).ToNot(HaveOccurred())
 
-			command, err := repository.Get("command1")
+			command, err := repository.GetCommand("command1")
 			Expect(err).ToNot(HaveOccurred())
 
 			err = command.Command("")
