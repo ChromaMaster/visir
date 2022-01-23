@@ -8,7 +8,7 @@ import (
 
 var _ = Describe("Dispatcher", func() {
 	var (
-		repository *command.CommandRepository
+		repository *command.Repository
 	)
 
 	BeforeEach(func() {

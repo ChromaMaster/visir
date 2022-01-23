@@ -5,10 +5,10 @@ import (
 )
 
 type Dispatcher struct {
-	Commands *CommandRepository
+	Commands *Repository
 }
 
-func NewDispatcher(commands *CommandRepository) *Dispatcher {
+func NewDispatcher(commands *Repository) *Dispatcher {
 	return &Dispatcher{Commands: commands}
 }
 

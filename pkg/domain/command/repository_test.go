@@ -9,7 +9,7 @@ import (
 
 var _ = Describe("Repository", func() {
 	var (
-		repository *command.CommandRepository
+		repository *command.Repository
 	)
 
 	BeforeEach(func() {
