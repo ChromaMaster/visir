@@ -1,14 +1,10 @@
 package command
 
 import (
-	"errors"
 	"fmt"
 )
 
-var (
-	ErrCommandNotFound          = errors.New("command not found")
-	ErrCommandAlreadyRegistered = errors.New("command already registered")
-)
+
 
 type Repository interface {
 	RegisterCommand(command Command) error
