@@ -5,6 +5,7 @@ build:
 
 deps:
 	go install ./...
+	go install github.com/onsi/ginkgo/v2/ginkgo@v2.1.3
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 fmt:
