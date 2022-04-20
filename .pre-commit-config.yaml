@@ -1,0 +1,31 @@
+repos:
+  - repo: local
+    hooks:
+      - id: format
+        name: Go Format
+        pass_filenames: false
+        entry: make fmt
+        language: system
+      - id: lint
+        name: Lint package
+        pass_filenames: false
+        entry: make lint
+        language: system
+      - id: tidy
+        name: Tidy
+        pass_filenames: false
+        entry: make tidy
+        language: system
+      - id: test
+        name: Test
+        pass_filenames: false
+        entry: make test
+        language: system
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1  # Use the ref you want to point at
+    hooks:
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: end-of-file-fixer
+      # - id: no-commit-to-branch
