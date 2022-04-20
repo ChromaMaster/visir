@@ -2,7 +2,7 @@ package command_test
 
 import (
 	"github.com/ChromaMaster/visir/pkg/domain/command"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
@@ -23,7 +23,7 @@ var _ = Describe("Dispatcher", func() {
 			}})
 			Expect(err).ToNot(HaveOccurred())
 
-			dispatcher:= command.NewDispatcher(repository)
+			dispatcher := command.NewDispatcher(repository)
 			err = dispatcher.Run("command1")
 			Expect(err).ToNot(HaveOccurred())
 		})

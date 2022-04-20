@@ -3,7 +3,7 @@ package private_ip_test
 import (
 	"github.com/ChromaMaster/visir/pkg/domain/system/network"
 	"github.com/ChromaMaster/visir/pkg/infrastructure/network/private_ip"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 

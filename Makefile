@@ -1,4 +1,4 @@
-.PHONY: build generate fmt lint tidy test
+.PHONY: build generate fmt lint tidy test clean
 
 build:
 	go build -v ./...
@@ -18,3 +18,6 @@ lint:
 
 test:
 	ginkgo -r -race -randomizeAllSpecs -randomizeSuites -trace -progress -cover -skipPackage ./...
+
+clean:
+	find -name "*.coverprofile" -type f | xargs rm

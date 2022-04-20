@@ -1,11 +1,11 @@
 package public_ip_ipinfo_test
 
 import (
+	"github.com/ChromaMaster/visir/pkg/infrastructure/network/public_ip_ipinfo"
 	"io"
 	"net/http"
-	"github.com/ChromaMaster/visir/pkg/infrastructure/network/public_ip_ipinfo"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 

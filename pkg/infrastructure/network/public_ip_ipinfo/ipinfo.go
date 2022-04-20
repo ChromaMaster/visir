@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-type PublicIPAddressProvider struct {}
+type PublicIPAddressProvider struct{}
 
 func (p *PublicIPAddressProvider) GetPublicIPAddress() (string, error) {
 	response, err := http.Get("https://ipinfo.io/ip")
