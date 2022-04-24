@@ -1,5 +1,9 @@
 package usecase
 
+type UseCase interface {
+	Execute(text string) string
+}
+
 type EchoUseCase struct {
 }
 
