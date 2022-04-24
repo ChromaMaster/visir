@@ -18,7 +18,7 @@ lint:
 	golangci-lint run
 
 test:
-	ginkgo -r -race -randomizeAllSpecs -randomizeSuites -trace -progress -cover -skipPackage ./...
+	ginkgo ./...
 
 clean:
 	find -name "*.coverprofile" -type f | xargs rm
