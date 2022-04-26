@@ -2,19 +2,53 @@ package telegrambot_test
 
 import (
 	"github.com/ChromaMaster/visir/pkg/application/telegrambot"
+	"github.com/ChromaMaster/visir/pkg/domain/usecase"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
-type FakeEchoUserCase struct {
+type FakeUsecaseFactory struct {
 	ExecCount int
 }
 
-func (f *FakeEchoUserCase) Execute(text string) string {
-	f.ExecCount++
+func (f *FakeUsecaseFactory) NewEchoUseCase() usecase.UseCase {
+	return &FakeUsecase{factory: f}
+}
+
+type FakeUsecase struct {
+	factory *FakeUsecaseFactory
+}
+
+func (f FakeUsecase) Execute(text string) string {
+	f.factory.ExecCount++
 	return ""
 }
+
+var _ = Describe("Telegrambot", func() {
+
+	usecaseFactory := FakeUsecaseFactory{}
+
+	BeforeEach(func() {
+		usecaseFactory.ExecCount = 0
+	})
+
+	When("the echo command is received", func() {
+		It("executes the echo command", func() {
+			tgbotAPI := &TelegramBotSeam{
+				BotAPI:  nil,
+				updates: []tgbotapi.Update{echoUpdate()},
+			}
+
+			telegramBot := telegrambot.NewBot(tgbotAPI, &usecaseFactory)
+
+			telegramBot.Start()
+
+			Expect(usecaseFactory.ExecCount).To(Equal(1))
+			Expect(len(tgbotAPI.messagesSent)).To(Equal(1))
+		})
+	})
+})
 
 type TelegramBotSeam struct {
 	*tgbotapi.BotAPI
@@ -37,25 +71,6 @@ func (t *TelegramBotSeam) GetUpdatesChan(config tgbotapi.UpdateConfig) (tgbotapi
 	}()
 	return result, nil
 }
-
-var _ = Describe("Telegrambot", func() {
-	When("the echo command is received", func() {
-		It("executes the echo command", func() {
-			echoUsecase := &FakeEchoUserCase{}
-			tgbotAPI := &TelegramBotSeam{
-				BotAPI:  nil,
-				updates: []tgbotapi.Update{echoUpdate()},
-			}
-
-			telegramBot := telegrambot.NewBot(tgbotAPI, echoUsecase)
-
-			telegramBot.Start()
-
-			Expect(echoUsecase.ExecCount).To(Equal(1))
-			Expect(len(tgbotAPI.messagesSent)).To(Equal(1))
-		})
-	})
-})
 
 func echoUpdate() tgbotapi.Update {
 	return tgbotapi.Update{

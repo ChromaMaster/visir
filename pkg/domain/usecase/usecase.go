@@ -4,13 +4,23 @@ type UseCase interface {
 	Execute(text string) string
 }
 
-type EchoUseCase struct {
+type Factory interface {
+	NewEchoUseCase() UseCase
 }
+
+type factory struct {
+}
+
+func NewFactory() Factory {
+	return &factory{}
+}
+
+func (f *factory) NewEchoUseCase() UseCase {
+	return &EchoUseCase{}
+}
+
+type EchoUseCase struct{}
 
 func (e *EchoUseCase) Execute(text string) string {
 	return text
-}
-
-func NewEchoUseCase() *EchoUseCase {
-	return &EchoUseCase{}
 }

@@ -15,13 +15,13 @@ type TelegramBot interface {
 
 type Bot struct {
 	tgbotAPI TelegramBot
-	usecase  usecase.UseCase
+	factory  usecase.Factory
 }
 
-func NewBot(tgbotAPI TelegramBot, usecase usecase.UseCase) *Bot {
+func NewBot(tgbotAPI TelegramBot, factory usecase.Factory) *Bot {
 	return &Bot{
 		tgbotAPI: tgbotAPI,
-		usecase:  usecase,
+		factory:  factory,
 	}
 }
 
@@ -44,7 +44,7 @@ func (b *Bot) Start() {
 		fmt.Println(messageText)
 		if strings.HasPrefix(messageText, "/echo") {
 			args := strings.ReplaceAll(messageText, "/echo ", "")
-			text := b.usecase.Execute(args)
+			text := b.factory.NewEchoUseCase().Execute(args)
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, text)
 			msg.ReplyToMessageID = update.Message.MessageID
 			_, err := b.tgbotAPI.Send(msg)

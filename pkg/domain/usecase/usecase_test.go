@@ -8,7 +8,8 @@ import (
 
 var _ = Describe("Echo Use Case", func() {
 	It("returns the same text that was provided", func() {
-		echoUsecase := usecase.NewEchoUseCase()
+		f := usecase.NewFactory()
+		echoUsecase := f.NewEchoUseCase()
 		result := echoUsecase.Execute("text")
 		Expect(result).To(Equal("text"))
 	})
