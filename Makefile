@@ -18,7 +18,10 @@ lint:
 	golangci-lint run
 
 test:
-	ginkgo ./...
+	ginkgo --skip-package infrastructure ./...
+
+test-integration:
+	ginkgo ./pkg/infrastructure/...
 
 clean:
 	find -name "*.coverprofile" -type f | xargs rm
