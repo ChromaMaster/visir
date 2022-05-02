@@ -16,6 +16,10 @@ func (f *FakeUsecaseFactory) NewEchoUseCase() usecase.UseCase {
 	return &FakeUsecase{factory: f}
 }
 
+func (f *FakeUsecaseFactory) NewPublicIpUseCase() usecase.UseCase {
+	return &FakeUsecase{factory: f}
+}
+
 type FakeUsecase struct {
 	factory *FakeUsecaseFactory
 }
@@ -38,6 +42,22 @@ var _ = Describe("Telegrambot", func() {
 			tgbotAPI := &TelegramBotSeam{
 				BotAPI:  nil,
 				updates: []tgbotapi.Update{echoUpdate()},
+			}
+
+			telegramBot := telegrambot.NewBot(tgbotAPI, &usecaseFactory)
+
+			telegramBot.Start()
+
+			Expect(usecaseFactory.ExecCount).To(Equal(1))
+			Expect(len(tgbotAPI.messagesSent)).To(Equal(1))
+		})
+	})
+
+	When("the public_ip command is received", func() {
+		It("executes the public_ip command", func() {
+			tgbotAPI := &TelegramBotSeam{
+				BotAPI:  nil,
+				updates: []tgbotapi.Update{publicIp()},
 			}
 
 			telegramBot := telegrambot.NewBot(tgbotAPI, &usecaseFactory)
@@ -76,6 +96,17 @@ func echoUpdate() tgbotapi.Update {
 	return tgbotapi.Update{
 		Message: &tgbotapi.Message{
 			Text: "/echo foo",
+			Chat: &tgbotapi.Chat{
+				ID: int64(0),
+			},
+		},
+	}
+}
+
+func publicIp() tgbotapi.Update {
+	return tgbotapi.Update{
+		Message: &tgbotapi.Message{
+			Text: "/publicIp",
 			Chat: &tgbotapi.Chat{
 				ID: int64(0),
 			},

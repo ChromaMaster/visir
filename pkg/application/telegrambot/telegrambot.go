@@ -42,15 +42,40 @@ func (b *Bot) Start() {
 
 		messageText := update.Message.Text
 		fmt.Println(messageText)
-		if strings.HasPrefix(messageText, "/echo") {
-			args := strings.ReplaceAll(messageText, "/echo ", "")
-			text := b.factory.NewEchoUseCase().Execute(args)
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, text)
-			msg.ReplyToMessageID = update.Message.MessageID
-			_, err := b.tgbotAPI.Send(msg)
-			if err != nil {
-				log.Println(err)
-			}
+		if !isCommand(messageText) {
+			continue
+		}
+		comm, args := extractCommandInfo(messageText)
+		var response string
+		switch comm {
+		case "echo":
+			response = b.factory.NewEchoUseCase().Execute(args)
+		case "publicIp":
+			response = b.factory.NewPublicIpUseCase().Execute("")
+		}
+
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, response)
+		msg.ReplyToMessageID = update.Message.MessageID
+		_, err := b.tgbotAPI.Send(msg)
+		if err != nil {
+			log.Println(err)
 		}
 	}
+}
+
+func isCommand(text string) bool {
+	if !strings.HasPrefix(text, "/") {
+		return false
+	}
+	if len(strings.ReplaceAll(text, "/", "")) == 0 {
+		return false
+	}
+	return true
+}
+
+func extractCommandInfo(text string) (command string, args string) {
+	fields := strings.Fields(strings.ReplaceAll(text, "/", ""))
+	command = fields[0]
+	args = strings.Join(fields[1:], "")
+	return
 }
