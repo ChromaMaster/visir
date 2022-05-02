@@ -37,6 +37,22 @@ var _ = Describe("Telegrambot", func() {
 		usecaseFactory.ExecCount = 0
 	})
 
+	When("a message from a unauthorized user is received", func() {
+		It("it's not handled", func() {
+			tgbotAPI := &TelegramBotSeam{
+				BotAPI:  nil,
+				updates: []tgbotapi.Update{unauthorizedMessage()},
+			}
+
+			telegramBot := telegrambot.NewBot(tgbotAPI, 0, &usecaseFactory)
+
+			telegramBot.Start()
+
+			Expect(usecaseFactory.ExecCount).To(Equal(0))
+			Expect(len(tgbotAPI.messagesSent)).To(Equal(0))
+		})
+	})
+
 	When("the echo command is received", func() {
 		It("executes the echo command", func() {
 			tgbotAPI := &TelegramBotSeam{
@@ -44,7 +60,7 @@ var _ = Describe("Telegrambot", func() {
 				updates: []tgbotapi.Update{echoUpdate()},
 			}
 
-			telegramBot := telegrambot.NewBot(tgbotAPI, &usecaseFactory)
+			telegramBot := telegrambot.NewBot(tgbotAPI, 0, &usecaseFactory)
 
 			telegramBot.Start()
 
@@ -57,10 +73,10 @@ var _ = Describe("Telegrambot", func() {
 		It("executes the public_ip command", func() {
 			tgbotAPI := &TelegramBotSeam{
 				BotAPI:  nil,
-				updates: []tgbotapi.Update{publicIp()},
+				updates: []tgbotapi.Update{publicIpUpdate()},
 			}
 
-			telegramBot := telegrambot.NewBot(tgbotAPI, &usecaseFactory)
+			telegramBot := telegrambot.NewBot(tgbotAPI, 0, &usecaseFactory)
 
 			telegramBot.Start()
 
@@ -92,23 +108,29 @@ func (t *TelegramBotSeam) GetUpdatesChan(config tgbotapi.UpdateConfig) (tgbotapi
 	return result, nil
 }
 
+func unauthorizedMessage() tgbotapi.Update {
+	msg := tgMessage("/echo foo")
+	msg.Message.From.ID = 1
+	return msg
+}
+
 func echoUpdate() tgbotapi.Update {
+	return tgMessage("/echo foo")
+}
+
+func publicIpUpdate() tgbotapi.Update {
+	return tgMessage("/publicIp")
+}
+
+func tgMessage(text string) tgbotapi.Update {
 	return tgbotapi.Update{
 		Message: &tgbotapi.Message{
-			Text: "/echo foo",
+			Text: text,
 			Chat: &tgbotapi.Chat{
 				ID: int64(0),
 			},
-		},
-	}
-}
-
-func publicIp() tgbotapi.Update {
-	return tgbotapi.Update{
-		Message: &tgbotapi.Message{
-			Text: "/publicIp",
-			Chat: &tgbotapi.Chat{
-				ID: int64(0),
+			From: &tgbotapi.User{
+				ID: 0,
 			},
 		},
 	}

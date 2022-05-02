@@ -15,12 +15,14 @@ type TelegramBot interface {
 
 type Bot struct {
 	tgbotAPI TelegramBot
+	adminID  int
 	factory  usecase.Factory
 }
 
-func NewBot(tgbotAPI TelegramBot, factory usecase.Factory) *Bot {
+func NewBot(tgbotAPI TelegramBot, adminID int, factory usecase.Factory) *Bot {
 	return &Bot{
 		tgbotAPI: tgbotAPI,
+		adminID:  adminID,
 		factory:  factory,
 	}
 }
@@ -37,6 +39,10 @@ func (b *Bot) Start() {
 
 	for update := range updates {
 		if update.Message == nil { // If we got a message
+			continue
+		}
+
+		if update.Message.From.ID != b.adminID {
 			continue
 		}
 
