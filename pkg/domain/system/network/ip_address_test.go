@@ -7,24 +7,6 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-type FakePrivateIPAddressProvider struct {
-	errorMustBeReturned bool
-}
-
-func (p *FakePrivateIPAddressProvider) GetPrivateIPAddresses() ([]network.IpAddress, error) {
-	if p.errorMustBeReturned {
-		return nil, errors.New("")
-	}
-	return []network.IpAddress{
-		{"eth0", []string{"127.0.0.1"}},
-		{"eth1", []string{"8.8.8.8"}},
-	}, nil
-}
-
-func (p *FakePrivateIPAddressProvider) shouldReturnAnError() {
-	p.errorMustBeReturned = true
-}
-
 var _ = Describe("System Info / IP Address", func() {
 	var (
 		ipAddressService          *network.IPAddressService
@@ -48,7 +30,7 @@ var _ = Describe("System Info / IP Address", func() {
 
 	When("the provider is unable to extract the IP", func() {
 		It("returns an error", func() {
-			publicAddressProvider.shouldReturnError()
+			publicAddressProvider.ErrorMustBeReturned = true
 
 			ipAddress, err := ipAddressService.GetPublicIPAddress()
 
@@ -67,7 +49,7 @@ var _ = Describe("System Info / IP Address", func() {
 
 		When("the external provider is unable to retrieve the IP addresses", func() {
 			It("returns an error", func() {
-				internalIPAddressProvider.shouldReturnAnError()
+				internalIPAddressProvider.ErrorMustBeReturned = true
 
 				ipAddress, err := ipAddressService.GetPrivateIPAddresses()
 
@@ -79,16 +61,26 @@ var _ = Describe("System Info / IP Address", func() {
 })
 
 type FakePublicIPAddressProvider struct {
-	errorMustBeReturned bool
+	ErrorMustBeReturned bool
 }
 
 func (f *FakePublicIPAddressProvider) GetPublicIPAddress() (string, error) {
-	if f.errorMustBeReturned {
+	if f.ErrorMustBeReturned {
 		return "", errors.New("unknown error")
 	}
 	return "127.0.0.1", nil
 }
 
-func (f *FakePublicIPAddressProvider) shouldReturnError() {
-	f.errorMustBeReturned = true
+type FakePrivateIPAddressProvider struct {
+	ErrorMustBeReturned bool
+}
+
+func (p *FakePrivateIPAddressProvider) GetPrivateIPAddresses() ([]network.IpAddress, error) {
+	if p.ErrorMustBeReturned {
+		return nil, errors.New("")
+	}
+	return []network.IpAddress{
+		{"eth0", []string{"127.0.0.1"}},
+		{"eth1", []string{"8.8.8.8"}},
+	}, nil
 }
